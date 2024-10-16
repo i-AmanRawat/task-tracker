@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { useForm } from "react-hook-form";
+import Link from "next/link";
 
 import { DottedSeparator } from "@/components/dotted-separator";
 import { Button } from "@/components/ui/button";
@@ -24,31 +25,23 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
-import Link from "next/link";
-
-const formSchema = z.object({
-  email: z
-    .string()
-    .trim()
-    .min(1, { message: "required" })
-    .email({ message: "Enter a valid Email" }),
-  password: z
-    .string()
-    .min(6, { message: "Minimum 6 characters" })
-    .max(256, { message: "Maximum 256 characters" }),
-});
+import { loginSchema } from "../schema";
+import { useLogin } from "../api/use-login";
 
 export function SignInCard() {
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const { mutate } = useLogin();
+
+  const form = useForm<z.infer<typeof loginSchema>>({
+    resolver: zodResolver(loginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log("values : ", values);
+  function onSubmit(values: z.infer<typeof loginSchema>) {
+    console.log("user entered data: ", values);
+    mutate({ json: values });
   }
 
   return (
