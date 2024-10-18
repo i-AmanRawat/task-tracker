@@ -1,19 +1,20 @@
 import { Hono } from "hono";
 import { ID } from "node-appwrite";
-import { createAdminClient } from "@/lib/appwrite";
 import { deleteCookie, setCookie } from "hono/cookie";
-
 import { zValidator } from "@hono/zod-validator";
+
+import { createAdminClient } from "@/lib/appwrite";
+import { sessionMiddleware } from "@/lib/session-middleware";
+
 import { loginSchema, registerSchema } from "../schema";
 import { AUTH_COOKIE } from "../constants";
-import { sessionMiddleware } from "@/lib/session-middleware";
 
 //this chaining is required for making rpc work
 const auth = new Hono()
   .get("/current", sessionMiddleware, async (c) => {
     const user = c.get("user");
 
-    return c.json({ data: user });
+    return c.json({ success: true, data: user });
   })
   .post("/login", zValidator("json", loginSchema), async (c) => {
     const { email, password } = c.req.valid("json");
