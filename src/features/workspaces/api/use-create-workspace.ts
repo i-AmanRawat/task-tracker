@@ -12,8 +12,8 @@ export function useCreateWorkspace() {
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     // mutationKey: ["create-workspace"],
-    mutationFn: async ({ json }) => {
-      const response = await client.api.workspace.$post({ json });
+    mutationFn: async ({ form }) => {
+      const response = await client.api.workspace.$post({ form });
 
       if (!response.ok) {
         toast.error("Failed to create workspace");

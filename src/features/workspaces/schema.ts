@@ -5,4 +5,10 @@ export const createWorkspaceSchema = z.object({
     .string()
     .min(1, { message: "Required" })
     .max(256, { message: "couldn't be more than 256 characters" }),
+  image: z
+    .union([
+      z.instanceof(File),
+      z.string().transform((value) => (value === "" ? undefined : value)),
+    ])
+    .optional(),
 });
