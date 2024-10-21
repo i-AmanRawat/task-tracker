@@ -43,7 +43,6 @@ export function SignInCard() {
   });
 
   function onSubmit(values: z.infer<typeof loginSchema>) {
-    console.log("user entered data: ", values);
     mutate({ json: values });
   }
 

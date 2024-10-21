@@ -4,6 +4,8 @@ import { z } from "zod";
 import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { ImageIcon } from "lucide-react";
 
 import {
   Card,
@@ -27,8 +29,6 @@ import { DottedSeparator } from "@/components/dotted-separator";
 
 import { createWorkspaceSchema } from "../schema";
 import { useCreateWorkspace } from "../api/use-create-workspace";
-import Image from "next/image";
-import { ImageIcon } from "lucide-react";
 
 interface CreateWorkspaceFormProps {
   onCancel?: () => void;
@@ -47,7 +47,6 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
   });
 
   function onSubmit(values: z.infer<typeof createWorkspaceSchema>) {
-    console.log(values);
     const data = {
       ...values,
       image: values.image instanceof File ? values.image : "",
