@@ -29,12 +29,14 @@ import { DottedSeparator } from "@/components/dotted-separator";
 
 import { createWorkspaceSchema } from "../schema";
 import { useCreateWorkspace } from "../api/use-create-workspace";
+import { useRouter } from "next/navigation";
 
 interface CreateWorkspaceFormProps {
   onCancel?: () => void;
 }
 
 export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
+  const router = useRouter();
   const { mutate, isPending } = useCreateWorkspace();
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -54,8 +56,11 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
     mutate(
       { form: data },
       {
-        onSuccess: () => form.reset(),
-        //TODO: redirect to new workspace
+        onSuccess: ({ data }) => {
+          form.reset();
+          router.push(`/workspace/${data.$id}`);
+        },
+        onError: () => form.reset(),
       }
     );
   }

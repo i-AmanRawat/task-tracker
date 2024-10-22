@@ -1,3 +1,4 @@
+//get current user using the cookie from the local storage
 import { cookies } from "next/headers";
 import { Account, Client } from "node-appwrite";
 

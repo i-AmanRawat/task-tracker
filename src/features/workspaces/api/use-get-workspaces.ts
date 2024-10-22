@@ -10,7 +10,7 @@ export function useGetWorkspaces() {
       const response = await client.api.workspace.$get();
 
       if (!response.ok) {
-        toast.error("Failed to fetch workspacea detail");
+        toast.error("Failed to fetch workspace detail");
         throw new Error("Failed to fetch workspaces detail");
       }
 
