@@ -2,11 +2,13 @@
 
 import { z } from "zod";
 import { useRef } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Image from "next/image";
 import { ImageIcon } from "lucide-react";
 
+import { cn } from "@/lib/utils";
 import {
   Card,
   CardContent,
@@ -29,7 +31,6 @@ import { DottedSeparator } from "@/components/dotted-separator";
 
 import { createWorkspaceSchema } from "../schema";
 import { useCreateWorkspace } from "../api/use-create-workspace";
-import { useRouter } from "next/navigation";
 
 interface CreateWorkspaceFormProps {
   onCancel?: () => void;
@@ -58,7 +59,7 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
       {
         onSuccess: ({ data }) => {
           form.reset();
-          router.push(`/workspace/${data.$id}`);
+          router.push(`/workspaces/${data.$id}`);
         },
         onError: () => form.reset(),
       }
@@ -166,6 +167,7 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
                   size={"lg"}
                   variant="secondary"
                   onClick={onCancel}
+                  className={cn(!onCancel && "invisible")}
                 >
                   Cancel
                 </Button>
