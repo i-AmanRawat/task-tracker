@@ -2,6 +2,9 @@ import { cookies } from "next/headers";
 import { Account, Client, Databases, Query } from "node-appwrite";
 
 import { AUTH_COOKIE } from "@/features/auth/constants";
+import { getMember } from "@/features/members/utils";
+import { Workspace } from "@/features/workspaces/types";
+
 import { DATABASE_ID, MEMBERS_ID, WORKSPACES_ID } from "@/config";
 
 //this is not a server action rather just a explicit layer we are adding to protect our route
@@ -15,7 +18,7 @@ export async function getWorkspaces() {
     const cookieStore = cookies();
     const session = cookieStore.get(AUTH_COOKIE);
 
-    if (!session) return null;
+    if (!session) return { documents: [], total: 0 };
 
     client.setSession(session.value);
 
@@ -43,5 +46,49 @@ export async function getWorkspaces() {
   } catch (e) {
     console.error(e);
     return { documents: [], total: 0 };
+  }
+}
+
+interface GetWorkspaceProps {
+  workspaceId: string;
+}
+
+export async function getWorkspace({ workspaceId }: GetWorkspaceProps) {
+  try {
+    const client = new Client()
+      .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
+      .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);
+
+    const cookieStore = cookies();
+    const session = cookieStore.get(AUTH_COOKIE);
+
+    if (!session) return null;
+
+    client.setSession(session.value);
+
+    const account = new Account(client);
+    const databases = new Databases(client);
+    const user = await account.get();
+
+    const member = await getMember({
+      databases,
+      workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member) {
+      return null;
+    }
+
+    const workspace = await databases.getDocument<Workspace>(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId
+    );
+
+    return workspace;
+  } catch (e) {
+    console.error(e);
+    return null;
   }
 }
