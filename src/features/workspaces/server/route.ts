@@ -176,6 +176,48 @@ const workspace = new Hono()
         message: "updated workspace successfully",
       });
     }
-  );
+  )
+  .delete(":workspaceId", sessionMiddleware, async (c) => {
+    //get the param
+    const { workspaceId } = c.req.param();
+    const databases = c.get("databases");
+    const user = c.get("user");
+
+    //utilize the session to fetch the userID and check wheather he is part of this workspace with admin access or not
+    const member = await getMember({
+      databases,
+      workspaceId,
+      userId: user.$id,
+    });
+
+    //if not then return unauthorized
+    if (!member || member.role !== MemberRole.ADMIN) {
+      return c.json(
+        {
+          success: false,
+          message: "unauthorized",
+        },
+        401
+      );
+    }
+
+    //otherwise just run query on the workspaces and implement the delete functionality
+    //one more catch: need to delete members , projects and tasks that are linked to this workspace
+    //in postgres i would have just simply added cascade property
+    // TODO: delete members, projects and tasks
+    const workspace = await databases.deleteDocument(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId
+    );
+
+    console.log("deleted workspace data: ", workspace);
+
+    return c.json({
+      data: workspace,
+      success: true,
+      message: "deleted workspace successfully",
+    });
+  });
 
 export default workspace;
