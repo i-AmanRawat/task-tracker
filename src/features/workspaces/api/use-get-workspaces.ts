@@ -7,7 +7,7 @@ export function useGetWorkspaces() {
   const query = useQuery({
     queryKey: ["workspaces"],
     queryFn: async () => {
-      const response = await client.api.workspace.$get();
+      const response = await client.api.workspaces.$get();
 
       if (!response.ok) {
         toast.error("Failed to fetch workspace detail");

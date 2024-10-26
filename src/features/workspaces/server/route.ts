@@ -15,8 +15,9 @@ import {
 import { generateInviteCode } from "@/lib/utils";
 
 import { createWorkspaceSchema, updateWorkspaceSchema } from "../schema";
+import { Workspace } from "../types";
 
-const workspace = new Hono()
+const workspaces = new Hono()
   .get("/", sessionMiddleware, async (c) => {
     const user = c.get("user");
     const databases = c.get("databases");
@@ -176,6 +177,139 @@ const workspace = new Hono()
         message: "updated workspace successfully",
       });
     }
-  );
+  )
+  .delete(":workspaceId", sessionMiddleware, async (c) => {
+    //get the param
+    const { workspaceId } = c.req.param();
+    const databases = c.get("databases");
+    const user = c.get("user");
 
-export default workspace;
+    //utilize the session to fetch the userID and check wheather he is part of this workspace with admin access or not
+    const member = await getMember({
+      databases,
+      workspaceId,
+      userId: user.$id,
+    });
+
+    //if not then return unauthorized
+    if (!member || member.role !== MemberRole.ADMIN) {
+      return c.json(
+        {
+          success: false,
+          message: "unauthorized",
+        },
+        401
+      );
+    }
+
+    //otherwise just run query on the workspaces and implement the delete functionality
+    //one more catch: need to delete members , projects and tasks that are linked to this workspace
+    //in postgres i would have just simply added cascade property
+    // TODO: delete members, projects and tasks
+    const workspace = await databases.deleteDocument(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId
+    );
+
+    console.log("deleted workspace data: ", workspace);
+
+    return c.json({
+      data: workspace,
+      success: true,
+      message: "deleted workspace successfully",
+    });
+  })
+  .post(":workspaceId/reset-invite-code", sessionMiddleware, async (c) => {
+    //get the param
+    const { workspaceId } = c.req.param();
+    const databases = c.get("databases");
+    const user = c.get("user");
+
+    //utilize the session to fetch the userID and check wheather he is part of this workspace with admin access or not
+    const member = await getMember({
+      databases,
+      workspaceId,
+      userId: user.$id,
+    });
+
+    //if not then return unauthorized
+    if (!member || member.role !== MemberRole.ADMIN) {
+      return c.json(
+        {
+          success: false,
+          message: "unauthorized",
+        },
+        401
+      );
+    }
+
+    const workspace = await databases.updateDocument(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId,
+      { inviteCode: generateInviteCode(6) }
+    );
+
+    return c.json({
+      data: workspace,
+      success: true,
+      message: "invite code reset successfully",
+    });
+  })
+  .post(":workspaceId/join/:inviteCode", sessionMiddleware, async (c) => {
+    //fetch id and code
+    const { workspaceId, inviteCode } = c.req.param();
+
+    const user = c.get("user");
+    const databases = c.get("databases");
+
+    //check: already member of this workspace
+    const member = await getMember({
+      databases,
+      workspaceId,
+      userId: user.$id,
+    });
+
+    if (member) {
+      return c.json(
+        {
+          success: false,
+          message: "already a member",
+        },
+        400
+      );
+    }
+
+    //check: workspace exist
+    const workspace = await databases.getDocument<Workspace>(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId
+    );
+
+    //verify inivite code
+    if (workspace.inviteCode !== inviteCode)
+      return c.json(
+        {
+          success: false,
+          message: "invalid invite link",
+        },
+        400
+      );
+
+    //create a member with the user id and workspace id with member access
+    await databases.createDocument(DATABASE_ID, MEMBERS_ID, ID.unique(), {
+      workspaceId,
+      userId: user.$id,
+      role: MemberRole.MEMBER,
+    });
+
+    return c.json({
+      data: workspace,
+      success: true,
+      message: "joined workspace successfully",
+    });
+  });
+
+export default workspaces;
