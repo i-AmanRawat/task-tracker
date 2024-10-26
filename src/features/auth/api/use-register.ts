@@ -9,7 +9,8 @@ type ResquestType = InferRequestType<
   (typeof client.api.auth.register)["$post"]
 >;
 type ResponseType = InferResponseType<
-  (typeof client.api.auth.register)["$post"]
+  (typeof client.api.auth.register)["$post"],
+  200
 >;
 
 export function useRegister() {

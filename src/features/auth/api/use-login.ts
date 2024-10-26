@@ -6,7 +6,10 @@ import { client } from "@/lib/rpc";
 import { toast } from "sonner";
 
 type ResquestType = InferRequestType<(typeof client.api.auth.login)["$post"]>;
-type ResponseType = InferResponseType<(typeof client.api.auth.login)["$post"]>;
+type ResponseType = InferResponseType<
+  (typeof client.api.auth.login)["$post"],
+  200
+>;
 
 export function useLogin() {
   const router = useRouter();

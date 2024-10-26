@@ -5,7 +5,10 @@ import type { InferRequestType, InferResponseType } from "hono/client";
 import { client } from "@/lib/rpc";
 
 type RequestType = InferRequestType<(typeof client.api.workspaces)["$post"]>;
-type ResponseType = InferResponseType<(typeof client.api.workspaces)["$post"]>;
+type ResponseType = InferResponseType<
+  (typeof client.api.workspaces)["$post"],
+  200
+>;
 
 export function useCreateWorkspace() {
   const queryClient = useQueryClient();

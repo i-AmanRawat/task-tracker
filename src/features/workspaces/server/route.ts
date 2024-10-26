@@ -15,6 +15,7 @@ import {
 import { generateInviteCode } from "@/lib/utils";
 
 import { createWorkspaceSchema, updateWorkspaceSchema } from "../schema";
+import { Workspace } from "../types";
 
 const workspaces = new Hono()
   .get("/", sessionMiddleware, async (c) => {
@@ -254,6 +255,60 @@ const workspaces = new Hono()
       data: workspace,
       success: true,
       message: "invite code reset successfully",
+    });
+  })
+  .post(":workspaceId/join/:inviteCode", sessionMiddleware, async (c) => {
+    //fetch id and code
+    const { workspaceId, inviteCode } = c.req.param();
+
+    const user = c.get("user");
+    const databases = c.get("databases");
+
+    //check: already member of this workspace
+    const member = await getMember({
+      databases,
+      workspaceId,
+      userId: user.$id,
+    });
+
+    if (member) {
+      return c.json(
+        {
+          success: false,
+          message: "already a member",
+        },
+        400
+      );
+    }
+
+    //check: workspace exist
+    const workspace = await databases.getDocument<Workspace>(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId
+    );
+
+    //verify inivite code
+    if (workspace.inviteCode !== inviteCode)
+      return c.json(
+        {
+          success: false,
+          message: "invalid invite link",
+        },
+        400
+      );
+
+    //create a member with the user id and workspace id with member access
+    await databases.createDocument(DATABASE_ID, MEMBERS_ID, ID.unique(), {
+      workspaceId,
+      userId: user.$id,
+      role: MemberRole.MEMBER,
+    });
+
+    return c.json({
+      data: workspace,
+      success: true,
+      message: "joined workspace successfully",
     });
   });
 
