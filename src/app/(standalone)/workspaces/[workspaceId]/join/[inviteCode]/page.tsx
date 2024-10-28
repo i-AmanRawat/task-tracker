@@ -20,7 +20,7 @@ export default async function JoinWorkspacePage({
   if (!workspace) redirect("/");
 
   return (
-    <div className="w-full lg:max-w-xl">
+    <div className="w-full lg:max-w-2xl">
       <JoinWorkspaceForm initialValue={workspace} />
     </div>
   );

@@ -7,7 +7,7 @@ const CreateWorkspacePage = async () => {
   const current = await getCurrent();
   if (!current) redirect("/sign-in");
   return (
-    <div className="w-full lg:max-w-xl">
+    <div className="w-full lg:max-w-2xl">
       <CreateWorkspaceForm />
     </div>
   );
