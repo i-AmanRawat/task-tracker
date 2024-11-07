@@ -3,12 +3,13 @@
 import { z } from "zod";
 import { useRef } from "react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ImageIcon } from "lucide-react";
 
+import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { cn } from "@/lib/utils";
+
 import {
   Card,
   CardContent,
@@ -29,38 +30,38 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { DottedSeparator } from "@/components/dotted-separator";
 
-import { createWorkspaceSchema } from "../schema";
-import { useCreateWorkspace } from "../api/use-create-workspace";
+import { createProjectSchema } from "../schema";
+import { useCreateProject } from "../api/use-create-project";
 
-interface CreateWorkspaceFormProps {
+interface CreateProjecFormProps {
   onCancel?: () => void;
 }
 
-export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
-  const router = useRouter();
-  const { mutate, isPending } = useCreateWorkspace();
+export function CreateProjectForm({ onCancel }: CreateProjecFormProps) {
+  const workspaceId = useWorkspaceId();
+  const { mutate, isPending } = useCreateProject();
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const form = useForm<z.infer<typeof createWorkspaceSchema>>({
-    resolver: zodResolver(createWorkspaceSchema),
+  const form = useForm<z.infer<typeof createProjectSchema>>({
+    resolver: zodResolver(createProjectSchema.omit({ workspaceId: true })),
     defaultValues: {
       name: "",
     },
   });
 
-  function onSubmit(values: z.infer<typeof createWorkspaceSchema>) {
+  function onSubmit(values: z.infer<typeof createProjectSchema>) {
     const data = {
       ...values,
+      workspaceId,
       image: values.image instanceof File ? values.image : "",
     };
-
     mutate(
       { form: data },
       {
-        onSuccess: ({ data }) => {
+        onSuccess: () => {
           form.reset();
-          router.push(`/workspaces/${data.$id}`);
+          //TODO: redirect to the project page
         },
         onError: () => form.reset(),
       }
@@ -78,10 +79,8 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
   return (
     <Card className="w-full h-full border-none shadow-none">
       <CardHeader className="flex p-7">
-        <CardTitle className="tex-xl font-bold">Create new workspace</CardTitle>
-        <CardDescription>
-          Create your new workspace in one-click.
-        </CardDescription>
+        <CardTitle className="tex-xl font-bold">Create new project</CardTitle>
+        <CardDescription>Create your new project in one-click.</CardDescription>
       </CardHeader>
 
       <div className="px-7">
@@ -97,7 +96,7 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Workspace Name</FormLabel>
+                    <FormLabel>Project Name</FormLabel>
                     <FormControl>
                       <Input placeholder="shadcn" {...field} ref={inputRef} />
                     </FormControl>
@@ -133,7 +132,7 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
                         </Avatar>
                       )}
                       <div className="flex flex-col">
-                        <p className="text-sm">Workspace Icon</p>
+                        <p className="text-sm">Project Icon</p>
 
                         <p className="text-sm text-muted-foreground">
                           JPG, SVG, PNG, OR JPEG, max 1mb
@@ -193,7 +192,7 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
                   Cancel
                 </Button>
                 <Button disabled={isPending} type="submit" size={"lg"}>
-                  Create Workspace
+                  Create Project
                 </Button>
               </div>
             </div>

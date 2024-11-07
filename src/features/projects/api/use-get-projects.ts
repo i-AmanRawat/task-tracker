@@ -3,21 +3,21 @@ import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
 
-interface UseGetMembersProps {
+interface UseGetProjectsProps {
   workspaceId: string;
 }
 
-export function useGetMembers({ workspaceId }: UseGetMembersProps) {
+export function useGetProjects({ workspaceId }: UseGetProjectsProps) {
   const query = useQuery({
-    queryKey: ["members", workspaceId], //if workspaceId changes it will fetch the members automatically
+    queryKey: ["projects", workspaceId], //will refetch as the workspaceID changes
     queryFn: async () => {
-      const response = await client.api.members.$get({
+      const response = await client.api.projects.$get({
         query: { workspaceId },
       });
 
       if (!response.ok) {
-        toast.error("Failed to fetch members detail");
-        throw new Error("Failed to fetch members detail");
+        toast.error("Failed to fetch projects detail");
+        throw new Error("Failed to fetch projects detail");
       }
 
       const { data } = await response.json();
