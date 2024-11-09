@@ -3,6 +3,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { InferRequestType, InferResponseType } from "hono/client";
 
 import { client } from "@/lib/rpc";
+import { useRouter } from "next/navigation";
 
 type RequestType = InferRequestType<
   (typeof client.api.workspaces)[":workspaceId"]["reset-invite-code"]["$post"]
@@ -14,6 +15,7 @@ type ResponseType = InferResponseType<
 
 export function useResetInviteCode() {
   const queryClient = useQueryClient();
+  const router = useRouter();
 
   const mutation = useMutation<ResponseType, Error, RequestType>({
     // mutationKey: ["update-workspace"],ac
@@ -34,6 +36,7 @@ export function useResetInviteCode() {
     onSuccess: ({ data }) => {
       toast.success("invite code reset successfully");
 
+      router.refresh();
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
       queryClient.invalidateQueries({ queryKey: ["workspace", data.$id] });
     },

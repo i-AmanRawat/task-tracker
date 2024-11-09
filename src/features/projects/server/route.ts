@@ -4,10 +4,14 @@ import { zValidator } from "@hono/zod-validator";
 import { ID, Query } from "node-appwrite";
 
 import { getMember } from "@/features/members/utils";
+import {
+  createProjectSchema,
+  updateProjectSchema,
+} from "@/features/projects/schema";
+import { Project } from "@/features/projects/types";
 
 import { DATABASE_ID, IMAGES_BUCKET_ID, PROJECTS_ID } from "@/config";
 import { sessionMiddleware } from "@/lib/session-middleware";
-import { createProjectSchema } from "../schema";
 
 const projects = new Hono()
   .post(
@@ -126,6 +130,123 @@ const projects = new Hono()
         message: "project fetched successfully",
       });
     }
-  );
+  )
+  .patch(
+    "/:projectId",
+    sessionMiddleware,
+    zValidator("form", updateProjectSchema),
+    async (c) => {
+      const user = c.get("user");
+      const databases = c.get("databases");
+      const storage = c.get("storage");
+
+      const { name, image } = c.req.valid("form");
+
+      const projectId = c.req.param("projectId");
+
+      const existingProject = await databases.getDocument<Project>(
+        DATABASE_ID,
+        PROJECTS_ID,
+        projectId
+      );
+
+      const member = await getMember({
+        databases,
+        workspaceId: existingProject.workspaceId,
+        userId: user.$id,
+      });
+
+      if (!member) {
+        return c.json(
+          {
+            success: false,
+            message: "unauthorized",
+          },
+          401
+        );
+      }
+
+      let uploadedImageUrl: string | undefined;
+
+      if (image instanceof File) {
+        const file = await storage.createFile(
+          IMAGES_BUCKET_ID,
+          ID.unique(),
+          image
+        );
+
+        /*
+        ArrayBuffer: Raw binary data.
+        Base64: Textual encoding of binary data.      
+        (ArrayBuffer to Base64) when you need to send the binary data as text (e.g., in JSON, HTML, etc.).
+      */
+
+        const arrayBuffer = await storage.getFilePreview(
+          IMAGES_BUCKET_ID,
+          file.$id
+        );
+
+        uploadedImageUrl = `data:image/png;base64,${Buffer.from(
+          arrayBuffer
+        ).toString("base64")}`;
+      } else {
+        uploadedImageUrl = image;
+      }
+
+      const project = await databases.updateDocument(
+        DATABASE_ID,
+        PROJECTS_ID,
+        projectId,
+        {
+          name,
+          imageUrl: uploadedImageUrl,
+        }
+      );
+
+      return c.json({
+        data: project,
+        success: true,
+        message: "updated project successfully",
+      });
+    }
+  )
+  .delete(":projectId", sessionMiddleware, async (c) => {
+    //get the param
+    const { projectId } = c.req.param();
+    const databases = c.get("databases");
+    const user = c.get("user");
+
+    const existingProject = await databases.getDocument(
+      DATABASE_ID,
+      PROJECTS_ID,
+      projectId
+    );
+
+    //check wheather user is part of this workspace
+    const member = await getMember({
+      databases,
+      workspaceId: existingProject.workspaceId,
+      userId: user.$id,
+    });
+
+    //if not then return unauthorized
+    if (!member) {
+      return c.json(
+        {
+          success: false,
+          message: "unauthorized",
+        },
+        401
+      );
+    }
+
+    await databases.deleteDocument(DATABASE_ID, PROJECTS_ID, projectId);
+
+    return c.json({
+      success: true,
+      data: { $id: projectId },
+      message: "deleted project successfully",
+    });
+  });
 
 export default projects;

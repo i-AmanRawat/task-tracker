@@ -32,12 +32,14 @@ import { DottedSeparator } from "@/components/dotted-separator";
 
 import { createProjectSchema } from "../schema";
 import { useCreateProject } from "../api/use-create-project";
+import { useRouter } from "next/navigation";
 
 interface CreateProjecFormProps {
   onCancel?: () => void;
 }
 
 export function CreateProjectForm({ onCancel }: CreateProjecFormProps) {
+  const router = useRouter();
   const workspaceId = useWorkspaceId();
   const { mutate, isPending } = useCreateProject();
 
@@ -59,9 +61,9 @@ export function CreateProjectForm({ onCancel }: CreateProjecFormProps) {
     mutate(
       { form: data },
       {
-        onSuccess: () => {
+        onSuccess: ({ data }) => {
           form.reset();
-          //TODO: redirect to the project page
+          router.push(`/workspaces/$(workspaceId)/projects/${data.$id}`);
         },
         onError: () => form.reset(),
       }

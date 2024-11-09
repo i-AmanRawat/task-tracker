@@ -196,6 +196,7 @@ const workspaces = new Hono()
       return c.json(
         {
           success: false,
+          data: { $id: workspaceId },
           message: "unauthorized",
         },
         401

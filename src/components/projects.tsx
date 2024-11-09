@@ -12,7 +12,6 @@ import { RiAddCircleFill } from "react-icons/ri";
 export default function Projects() {
   const pathname = usePathname();
 
-  const projectId = null; //create a hook to get projectid just like workspaceid
   const workspaceId = useWorkspaceId();
 
   const { open } = useCreateProjectModal();
@@ -28,7 +27,7 @@ export default function Projects() {
         />
       </div>
       {data?.documents.map((project) => {
-        const href = `/workspaces/${workspaceId}/projects/${projectId}`;
+        const href = `/workspaces/${workspaceId}/projects/${project.$id}`;
         const isActive = pathname === href;
 
         return (
