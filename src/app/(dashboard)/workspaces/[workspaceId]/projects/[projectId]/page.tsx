@@ -1,11 +1,13 @@
+import Link from "next/link";
 import { redirect } from "next/navigation";
+import { PencilIcon } from "lucide-react";
 
 import { getCurrent } from "@/features/auth/queries";
 import { getProject } from "@/features/projects/queries";
 import { ProjectAvatar } from "@/features/projects/components/project-avatar";
+import TaskViewSwitcher from "@/features/tasks/components/task-view-switcher";
+
 import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import { PencilIcon } from "lucide-react";
 
 interface ProjectIdPageProps {
   params: {
@@ -33,15 +35,18 @@ export default async function ProjectIdPage({ params }: ProjectIdPageProps) {
           />
           <p className="text-lg font-semibold">{initialValues.name}</p>
         </div>
-        <Button variant="secondary" size="sm" asChild>
-          <Link
-            href={`/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}/settings`}
-          >
-            <PencilIcon className="size-4 mr-2" />
-            Edit Project
-          </Link>
-        </Button>
+        <div className="">
+          <Button variant="secondary" size="sm" asChild>
+            <Link
+              href={`/workspaces/${initialValues.workspaceId}/projects/${initialValues.$id}/settings`}
+            >
+              <PencilIcon className="size-4 mr-2" />
+              Edit Project
+            </Link>
+          </Button>
+        </div>
       </div>
+      <TaskViewSwitcher />
     </div>
   );
 }
