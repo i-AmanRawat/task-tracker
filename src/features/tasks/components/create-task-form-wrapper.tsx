@@ -3,9 +3,9 @@ import { Loader } from "lucide-react";
 import { useGetMembers } from "@/features/members/api/use-get-members";
 import { useGetProjects } from "@/features/projects/api/use-get-projects";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
+import { CreateTaskForm } from "@/features/tasks/components/create-task-form";
 
 import { Card, CardContent } from "@/components/ui/card";
-import { CreateTaskForm } from "./create-task-form";
 
 interface CreateTaskFormWrapperProps {
   onCancel: () => void;
@@ -29,16 +29,13 @@ export default function CreateTaskFormWrapper({
     name: project.name,
     imageUrl: project.imageUrl,
   }));
-  console.log("project options: ", projectOptions);
 
   const memberOptions = members?.documents.map((member) => ({
     id: member.$id,
     name: member.name,
   }));
-  console.log("member options: ", memberOptions);
 
   const isLoading = isLoadingProjects || isLoadingMembers;
-  console.log("isloading: ", isLoading);
 
   if (isLoading) {
     return (

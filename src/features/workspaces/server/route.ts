@@ -207,16 +207,10 @@ const workspaces = new Hono()
     //one more catch: need to delete members , projects and tasks that are linked to this workspace
     //in postgres i would have just simply added cascade property
     // TODO: delete members, projects and tasks
-    const workspace = await databases.deleteDocument(
-      DATABASE_ID,
-      WORKSPACES_ID,
-      workspaceId
-    );
-
-    console.log("deleted workspace data: ", workspace);
+    await databases.deleteDocument(DATABASE_ID, WORKSPACES_ID, workspaceId);
 
     return c.json({
-      data: workspace,
+      data: { $id: workspaceId },
       success: true,
       message: "deleted workspace successfully",
     });
