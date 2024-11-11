@@ -63,7 +63,7 @@ export function CreateProjectForm({ onCancel }: CreateProjecFormProps) {
       {
         onSuccess: ({ data }) => {
           form.reset();
-          router.push(`/workspaces/$(workspaceId)/projects/${data.$id}`);
+          router.push(`/workspaces/${workspaceId}/projects/${data.$id}`);
         },
         onError: () => form.reset(),
       }
@@ -100,7 +100,7 @@ export function CreateProjectForm({ onCancel }: CreateProjecFormProps) {
                   <FormItem>
                     <FormLabel>Project Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} ref={inputRef} />
+                      <Input placeholder="shadcn" {...field} />
                     </FormControl>
                     <FormMessage /> {/* displays the errors */}
                   </FormItem>

@@ -99,7 +99,7 @@ export function CreateWorkspaceForm({ onCancel }: CreateWorkspaceFormProps) {
                   <FormItem>
                     <FormLabel>Workspace Name</FormLabel>
                     <FormControl>
-                      <Input placeholder="shadcn" {...field} ref={inputRef} />
+                      <Input placeholder="shadcn" {...field} />
                     </FormControl>
                     <FormMessage /> {/* displays the errors */}
                   </FormItem>

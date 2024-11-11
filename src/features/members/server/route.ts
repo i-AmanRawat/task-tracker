@@ -27,6 +27,7 @@ const members = new Hono()
 
       const { users } = await createAdminClient();
 
+      //part of workspace or not
       const member = await getMember({
         databases,
         workspaceId,
@@ -35,13 +36,15 @@ const members = new Hono()
 
       if (!member) return c.json({ error: "Unauthorized" }, 401);
 
+      //all members from repective workspace
       const members = await databases.listDocuments(DATABASE_ID, MEMBERS_ID, [
         Query.equal("workspaceId", workspaceId),
       ]);
 
+      //populate data of members
       const populatedMembers = await Promise.all(
         members.documents.map(async (member) => {
-          const user = await users.get(member.$id);
+          const user = await users.get(member.userId);
 
           return {
             ...member,

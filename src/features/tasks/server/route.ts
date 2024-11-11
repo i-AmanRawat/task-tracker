@@ -6,11 +6,11 @@ import { ID, Query } from "node-appwrite";
 import { getMember } from "@/features/members/utils";
 import { Task, TaskStatus } from "@/features/tasks/types";
 import { createTaskSchema } from "@/features/tasks/schema";
+import { Project } from "@/features/projects/types";
 
 import { sessionMiddleware } from "@/lib/session-middleware";
-import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from "@/config";
 import { createAdminClient } from "@/lib/appwrite";
-import { Project } from "@/features/projects/types";
+import { DATABASE_ID, MEMBERS_ID, PROJECTS_ID, TASKS_ID } from "@/config";
 
 const tasks = new Hono()
   .get(
