@@ -81,7 +81,11 @@ const tasks = new Hono()
         query.push(Query.equal("dueDate", dueDate));
       }
 
-      const tasks = await databases.listDocuments(DATABASE_ID, TASKS_ID, query);
+      const tasks = await databases.listDocuments<Task>(
+        DATABASE_ID,
+        TASKS_ID,
+        query
+      );
 
       const projectIds = tasks.documents.map((task) => task.projectId);
       const assigneeIds = tasks.documents.map((task) => task.assigneeId);
@@ -111,16 +115,17 @@ const tasks = new Hono()
       );
 
       const populatedTasks = tasks.documents.map((task) => {
-        const project = projects.documents.map(
+        const project = projects.documents.find(
           (project) => project.$id === task.projectId
         );
 
-        const assignee = assignees.map(
+        const assignee = assignees.find(
           (assignee) => assignee.$id === task.assigneeId
         );
 
         return { ...task, assignee, project };
       });
+
       return c.json({
         success: true,
         data: { ...tasks, documents: populatedTasks },
