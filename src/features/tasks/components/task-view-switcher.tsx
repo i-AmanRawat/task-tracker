@@ -6,13 +6,14 @@ import { useQueryState } from "nuqs";
 import { useCreateTaskModal } from "@/features/tasks/hooks/use-create-task-modal";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 import { useGetTasks } from "@/features/tasks/api/use-get-tasks";
+import { useTaskFilters } from "@/features/tasks/hooks/use-task-filters";
+import { DataFilters } from "@/features/tasks/components/data-filters";
+import { columns } from "@/features/tasks/components/columns";
+import { DataTable } from "@/features/tasks/components/data-table";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DottedSeparator } from "@/components/dotted-separator";
-
-import { DataFilters } from "./data-filters";
-import { useTaskFilters } from "../hooks/use-task-filters";
 
 export default function TaskViewSwitcher() {
   const [{ status, projectId, assigneeId, dueDate }] = useTaskFilters();
@@ -73,13 +74,13 @@ export default function TaskViewSwitcher() {
         ) : (
           <>
             <TabsContent value="table" className="mt-0">
-              {JSON.stringify(tasks)}
+              <DataTable columns={columns} data={tasks?.documents ?? []} />
             </TabsContent>
             <TabsContent value="kanban" className="mt-0">
-              {JSON.stringify(tasks)}
+              <DataTable columns={columns} data={tasks?.documents ?? []} />
             </TabsContent>
             <TabsContent value="calendar" className="mt-0">
-              {JSON.stringify(tasks)}
+              <DataTable columns={columns} data={tasks?.documents ?? []} />
             </TabsContent>
           </>
         )}{" "}

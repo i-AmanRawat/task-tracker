@@ -18,3 +18,10 @@ export function generateInviteCode(length: number): string {
 
   return result;
 }
+
+export function snakeCaseToTitleCase(str: string) {
+  return str
+    .toLowerCase()
+    .replace(/_/g, " ") //collect all underscores
+    .replace(/\b\w/g, (char) => char.toUpperCase()); //catches first letter from each word in the string passed
+}

@@ -8,7 +8,7 @@ import { createTaskSchema } from "@/features/tasks/schema";
 import { useCreateTask } from "@/features/tasks/api/use-create-task";
 import { useWorkspaceId } from "@/features/workspaces/hooks/use-workspace-id";
 
-import { cn } from "@/lib/utils";
+import { cn, snakeCaseToTitleCase } from "@/lib/utils";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -172,7 +172,7 @@ export function CreateTaskForm({
                       <SelectContent>
                         {Object.values(TaskStatus).map((status) => (
                           <SelectItem key={status} value={status}>
-                            {status}
+                            {snakeCaseToTitleCase(status)}
                           </SelectItem>
                         ))}
                       </SelectContent>

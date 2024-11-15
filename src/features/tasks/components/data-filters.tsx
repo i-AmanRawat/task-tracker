@@ -16,6 +16,7 @@ import {
 
 import { TaskStatus } from "../types";
 import { useTaskFilters } from "../hooks/use-task-filters";
+import { snakeCaseToTitleCase } from "@/lib/utils";
 
 interface DataFiltersProps {
   hideProjectFilter?: boolean;
@@ -81,7 +82,7 @@ export function DataFilters({ hideProjectFilter }: DataFiltersProps) {
           <SelectSeparator />
           {Object.values(TaskStatus).map((status) => (
             <SelectItem key={status} value={status}>
-              {status}
+              {snakeCaseToTitleCase(status)}
             </SelectItem>
           ))}
         </SelectContent>
