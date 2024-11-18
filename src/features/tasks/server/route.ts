@@ -344,6 +344,89 @@ const tasks = new Hono()
       success: true,
       message: "task found",
     });
-  });
+  })
+  .post(
+    "bulk-update",
+    sessionMiddleware,
+    zValidator(
+      "json",
+      z.object({
+        tasks: z.array(
+          z.object({
+            $id: z.string(),
+            status: z.nativeEnum(TaskStatus),
+            position: z.number().int().positive().min(1000).max(1_000_000),
+          })
+        ),
+      })
+    ),
+    async (c) => {
+      const user = c.get("user");
+      const databases = c.get("databases");
+
+      const { tasks } = c.req.valid("json");
+
+      const tasksToUpdate = await databases.listDocuments<Task>(
+        DATABASE_ID,
+        TASKS_ID,
+        [
+          Query.contains(
+            "$id",
+            tasks.map((task) => task.$id)
+          ),
+        ]
+      );
+
+      //fetching all unique workspace ID's
+      const workspaceIds = new Set(
+        tasksToUpdate.documents.map((task) => task.workspaceId)
+      );
+
+      //dont't want member to exploit route | only allowed to bulk update for a single workspace ID
+      if (workspaceIds.size !== 1) {
+        return c.json({
+          success: false,
+          message: "All tasks must belong to the same workspace",
+        });
+      }
+
+      const workspaceId = workspaceIds.values().next().value;
+
+      if (!workspaceId) {
+        return c.json(
+          { success: false, message: "workspace ID is required" },
+          400
+        );
+      }
+
+      const member = getMember({ databases, workspaceId, userId: user.$id });
+
+      if (!member) {
+        return c.json({ success: false, message: "unauthorized" }, 401);
+      }
+
+      const updatedTasks = await Promise.all(
+        tasks.map(async (task) => {
+          const { $id, status, position } = task;
+
+          return await databases.updateDocument<Task>(
+            DATABASE_ID,
+            TASKS_ID,
+            $id,
+            {
+              status,
+              position,
+            }
+          );
+        })
+      );
+
+      return c.json({
+        success: true,
+        data: updatedTasks,
+        message: "Tasks updated successfully",
+      });
+    }
+  );
 
 export default tasks;

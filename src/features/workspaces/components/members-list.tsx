@@ -94,7 +94,7 @@ export function MembersList() {
       <CardContent className="p-7">
         {data?.documents.map((member, index) => (
           <Fragment key={member.$id}>
-            <div className="flex gap-2 item-center">
+            <div className="flex gap-2 items-center">
               <MemberAvatar
                 name={member.name}
                 className="size-10"

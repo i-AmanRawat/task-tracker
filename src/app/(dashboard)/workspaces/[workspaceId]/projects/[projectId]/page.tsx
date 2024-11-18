@@ -27,7 +27,7 @@ export default async function ProjectIdPage({ params }: ProjectIdPageProps) {
   return (
     <div className="flex flex-col gap-y-4">
       <div className="flex items-center justify-between">
-        <div className="flex item-center gap-x-2">
+        <div className="flex items-center gap-x-2">
           <ProjectAvatar
             name={initialValues.name}
             image={initialValues.imageUrl}

@@ -60,7 +60,7 @@ export function DataFilters({ hideProjectFilter }: DataFiltersProps) {
   }
 
   if (isLoading) {
-    <div className="flex item-center justify-center h-full">
+    <div className="flex items-center justify-center h-full">
       <Loader className="size-5 animate-spin text-muted-foreground" />
     </div>;
   }
@@ -72,7 +72,7 @@ export function DataFilters({ hideProjectFilter }: DataFiltersProps) {
         onValueChange={(value) => onStatusChange(value)}
       >
         <SelectTrigger className="w-full lg:w-auto h-8">
-          <div className="flex item-center pr-2">
+          <div className="flex items-center pr-2">
             <ListChecksIcon className="size-4 mr-2" />
             <SelectValue placeholder="All Status" />
           </div>
@@ -93,7 +93,7 @@ export function DataFilters({ hideProjectFilter }: DataFiltersProps) {
         onValueChange={(value) => onAssigneeChange(value)}
       >
         <SelectTrigger className="w-full lg:w-auto h-8">
-          <div className="flex item-center pr-2">
+          <div className="flex items-center pr-2">
             <UserIcon className="size-4 mr-2" />
             <SelectValue placeholder="All Assignees" />
           </div>
@@ -114,7 +114,7 @@ export function DataFilters({ hideProjectFilter }: DataFiltersProps) {
         onValueChange={(value) => onProjectChange(value)}
       >
         <SelectTrigger className="w-full lg:w-auto h-8">
-          <div className="flex item-center pr-2">
+          <div className="flex items-center pr-2">
             <FolderIcon className="size-4 mr-2" />
             <SelectValue placeholder="All Projects" />
           </div>

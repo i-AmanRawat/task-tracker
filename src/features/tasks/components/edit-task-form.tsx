@@ -144,7 +144,7 @@ export function EditTaskForm({
                       <SelectContent>
                         {memberOptions.map((member) => (
                           <SelectItem key={member.id} value={member.id}>
-                            <div className="flex item-center gap-x-2">
+                            <div className="flex items-center gap-x-2">
                               <MemberAvatar
                                 className="size-6"
                                 name={member.name}
@@ -206,7 +206,7 @@ export function EditTaskForm({
                       <SelectContent>
                         {projectOptions.map((project) => (
                           <SelectItem key={project.id} value={project.id}>
-                            <div className="flex item-center gap-x-2">
+                            <div className="flex items-center gap-x-2">
                               <ProjectAvatar
                                 className="size-6"
                                 name={project.name}
