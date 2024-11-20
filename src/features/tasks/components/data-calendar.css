@@ -11,7 +11,7 @@
 }
 
 .rbc-month-row {
-  @apply min-h-[130px] border-t border-x;
+  @apply min-h-[150px] border-t border-x;
 }
 
 :not(.rbc-month-row ~ .rbc-month-row).rbc-month-row {
