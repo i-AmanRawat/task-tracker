@@ -18,6 +18,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { DottedSeparator } from "@/components/dotted-separator";
 
 import { TaskStatus } from "../types";
+import { DataCalendar } from "./data-calendar";
+
 import { useBulkUpdateTasks } from "../api/use-bulk-update-tasks";
 
 export default function TaskViewSwitcher() {
@@ -98,7 +100,7 @@ export default function TaskViewSwitcher() {
               />
             </TabsContent>
             <TabsContent value="calendar" className="mt-0">
-              <DataTable columns={columns} data={tasks?.documents ?? []} />
+              <DataCalendar data={tasks?.documents ?? []} />
             </TabsContent>
           </>
         )}{" "}
