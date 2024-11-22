@@ -178,7 +178,7 @@ const workspaces = new Hono()
       });
     }
   )
-  .delete(":workspaceId", sessionMiddleware, async (c) => {
+  .delete("/:workspaceId", sessionMiddleware, async (c) => {
     //get the param
     const { workspaceId } = c.req.param();
     const databases = c.get("databases");
@@ -215,7 +215,7 @@ const workspaces = new Hono()
       message: "deleted workspace successfully",
     });
   })
-  .post(":workspaceId/reset-invite-code", sessionMiddleware, async (c) => {
+  .post("/:workspaceId/reset-invite-code", sessionMiddleware, async (c) => {
     //get the param
     const { workspaceId } = c.req.param();
     const databases = c.get("databases");
@@ -252,7 +252,7 @@ const workspaces = new Hono()
       message: "invite code reset successfully",
     });
   })
-  .post(":workspaceId/join/:inviteCode", sessionMiddleware, async (c) => {
+  .post("/:workspaceId/join/:inviteCode", sessionMiddleware, async (c) => {
     //fetch id and code
     const { workspaceId, inviteCode } = c.req.param();
 

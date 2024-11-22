@@ -346,7 +346,7 @@ const tasks = new Hono()
     });
   })
   .post(
-    "bulk-update",
+    "/bulk-update",
     sessionMiddleware,
     zValidator(
       "json",
