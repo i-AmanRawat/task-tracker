@@ -19,7 +19,6 @@ export function useLogout() {
       const response = await client.api.auth.logout.$post();
 
       if (!response.ok) {
-        toast.error("Failed to logout");
         throw new Error("Failed to logout");
       }
 

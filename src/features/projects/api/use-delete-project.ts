@@ -3,7 +3,6 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { InferRequestType, InferResponseType } from "hono/client";
 
 import { client } from "@/lib/rpc";
-import { useRouter } from "next/navigation";
 
 type RequestType = InferRequestType<
   (typeof client.api.projects)[":projectId"]["$delete"]
@@ -23,7 +22,6 @@ export function useDeleteProject() {
       });
 
       if (!response.ok) {
-        toast.error("Failed to delete project");
         throw new Error("Failed to delete project");
       }
 

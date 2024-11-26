@@ -22,7 +22,6 @@ export function useBulkUpdateTasks() {
       });
 
       if (!response.ok) {
-        toast.error("Failed to bulk update tasks");
         throw new Error("Failed to bulk update tasks");
       }
 

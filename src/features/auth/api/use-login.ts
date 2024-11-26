@@ -20,7 +20,6 @@ export function useLogin() {
       const response = await client.api.auth.login.$post({ json });
 
       if (!response.ok) {
-        toast.error("Failed to log in");
         throw new Error("Failed to log in");
       }
 

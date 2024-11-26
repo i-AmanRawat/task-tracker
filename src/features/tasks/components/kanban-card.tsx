@@ -18,7 +18,6 @@ export function KanbanCard({ task }: KanbanCardProps) {
       <div className="flex items-start justify-between gap-x-2">
         <div className="">
           <p className="text-sm line-clamp-2">{task.name}</p>
-          <p className="text-sm line-clamp-2">{task.$id}</p>
         </div>
         <TaskActions id={task.$id} projectId={task.projectId}>
           <MoreHorizontal className="size-[18px] stroke-1 shrink-0 text-neutral-700 hover:opacity-75 transition" />

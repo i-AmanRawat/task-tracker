@@ -44,6 +44,39 @@ const workspaces = new Hono()
       message: "fetched workspace successfully",
     });
   })
+  .get("/:workspaceId", sessionMiddleware, async (c) => {
+    const user = c.get("user");
+    const databases = c.get("databases");
+
+    const { workspaceId } = c.req.param();
+
+    const member = await getMember({
+      databases,
+      workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member)
+      return c.json(
+        {
+          success: false,
+          message: "unauthorised",
+        },
+        401
+      );
+
+    const workspace = await databases.getDocument<Workspace>(
+      DATABASE_ID,
+      WORKSPACES_ID,
+      workspaceId
+    );
+
+    return c.json({
+      success: true,
+      data: workspace,
+      message: "workspace fetched successfully",
+    });
+  })
   .post(
     "/",
     sessionMiddleware,

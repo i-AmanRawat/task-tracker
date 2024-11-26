@@ -19,7 +19,6 @@ export function useCreateWorkspace() {
       const response = await client.api.workspaces.$post({ form });
 
       if (!response.ok) {
-        toast.error("Failed to create workspace");
         throw new Error("Failed to create workspace");
       }
 

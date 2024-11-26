@@ -19,8 +19,9 @@ import { DottedSeparator } from "@/components/dotted-separator";
 
 import { TaskStatus } from "../types";
 import { DataCalendar } from "./data-calendar";
-
 import { useBulkUpdateTasks } from "../api/use-bulk-update-tasks";
+import { PageLoader } from "@/components/page-loader";
+import { PageError } from "@/components/page-error";
 
 interface TaskViewSwitcherProps {
   hideProjectFilter?: boolean;
@@ -54,6 +55,15 @@ export default function TaskViewSwitcher({
     },
     [bulkUpdate]
   );
+
+  if (isLoadingTasks) {
+    return <PageLoader />;
+  }
+  console.log("tasks: ", tasks);
+
+  if (!tasks || !tasks?.documents) {
+    return <PageError message="Tasks not found" />;
+  }
 
   return (
     <Tabs

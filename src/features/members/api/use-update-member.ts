@@ -23,7 +23,6 @@ export function useUpdateMember() {
       });
 
       if (!response.ok) {
-        toast.error("Failed to update member");
         throw new Error("Failed to update member");
       }
 

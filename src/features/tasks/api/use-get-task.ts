@@ -1,4 +1,3 @@
-import { toast } from "sonner";
 import { useQuery } from "@tanstack/react-query";
 
 import { client } from "@/lib/rpc";
@@ -16,7 +15,6 @@ export function useGetTask({ taskId }: UseGetTaskProps) {
       });
 
       if (!response.ok) {
-        toast.error("Failed to fetch task detail");
         throw new Error("Failed to fetch task detail");
       }
 

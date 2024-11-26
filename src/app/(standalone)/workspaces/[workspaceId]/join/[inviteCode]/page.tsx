@@ -25,3 +25,4 @@ export default async function JoinWorkspacePage({
     </div>
   );
 }
+//  /workspaces/672e22b20024f325a5ef/join/msrw>)

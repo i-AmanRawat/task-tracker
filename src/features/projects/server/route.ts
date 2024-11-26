@@ -78,6 +78,34 @@ const projects = new Hono()
       });
     }
   )
+  .get("/:projectId", sessionMiddleware, async (c) => {
+    const user = c.get("user");
+    const databases = c.get("databases");
+
+    const { projectId } = c.req.param();
+
+    const project = await databases.getDocument<Project>(
+      DATABASE_ID,
+      PROJECTS_ID,
+      projectId
+    );
+
+    const member = await getMember({
+      databases,
+      workspaceId: project.workspaceId,
+      userId: user.$id,
+    });
+
+    if (!member) {
+      return c.json({ success: false, message: "unauthorized" }, 401);
+    }
+
+    return c.json({
+      success: true,
+      data: project,
+      message: "project details fetched successfully",
+    });
+  })
   .get(
     "/",
     sessionMiddleware,
@@ -210,7 +238,7 @@ const projects = new Hono()
       });
     }
   )
-  .delete(":projectId", sessionMiddleware, async (c) => {
+  .delete("/:projectId", sessionMiddleware, async (c) => {
     //get the param
     const { projectId } = c.req.param();
     const databases = c.get("databases");

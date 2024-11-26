@@ -83,9 +83,6 @@ export function EditWorkspaceForm({
     mutate(
       { form: data, param: { workspaceId: initialValues.$id } },
       {
-        onSuccess: () => {
-          form.reset();
-        },
         onError: () => form.reset(),
       }
     );
@@ -104,9 +101,17 @@ export function EditWorkspaceForm({
 
     if (!ok) return;
 
-    deleteWorkspace({
-      param: { workspaceId: initialValues.$id },
-    });
+    deleteWorkspace(
+      {
+        param: { workspaceId: initialValues.$id },
+      }
+      // {
+      //   onSuccess: () => {
+      //     // Hard refresh to clear cache
+      //     window.location.href = "/";
+      //   },
+      // }
+    );
   }
 
   const inviteLink = `${window.location.origin}/workspaces/${initialValues.$id}/join/${initialValues.inviteCode}`;
@@ -127,18 +132,11 @@ export function EditWorkspaceForm({
 
     if (!ok) return;
 
-    resetInviteCode(
-      {
-        param: {
-          workspaceId: initialValues.$id,
-        },
-      }
-      // {
-      //   onSuccess: () => {
-      //     router.refresh();
-      //   },
-      // }
-    );
+    resetInviteCode({
+      param: {
+        workspaceId: initialValues.$id,
+      },
+    });
   }
 
   return (

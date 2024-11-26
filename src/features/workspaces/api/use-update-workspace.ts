@@ -26,7 +26,6 @@ export function useUpdateWorkspace() {
       });
 
       if (!response.ok) {
-        toast.error("Failed to update workspace");
         throw new Error("Failed to update workspace");
       }
 
@@ -34,8 +33,8 @@ export function useUpdateWorkspace() {
     },
     onSuccess: ({ data }) => {
       toast.success("Workspace updated");
+      router.push("/");
 
-      router.refresh();
       queryClient.invalidateQueries({ queryKey: ["workspaces"] });
       queryClient.invalidateQueries({ queryKey: ["workspace", data.$id] });
     },

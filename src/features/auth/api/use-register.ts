@@ -22,7 +22,6 @@ export function useRegister() {
       const response = await client.api.auth.register.$post({ json }); //current.$get() or ["$get"]() but while infering the request/response type ie.InferRequestType use [] syntax only
 
       if (!response.ok) {
-        toast.error("Failed to register");
         throw new Error("Failed to register");
       }
 

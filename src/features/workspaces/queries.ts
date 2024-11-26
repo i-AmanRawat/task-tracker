@@ -1,6 +1,5 @@
 import { Query } from "node-appwrite";
 
-import { getMember } from "@/features/members/utils";
 import { Workspace } from "@/features/workspaces/types";
 
 import { DATABASE_ID, MEMBERS_ID, WORKSPACES_ID } from "@/config";
@@ -43,48 +42,6 @@ export async function getWorkspaces() {
   ]);
 
   return workspaces;
-}
-
-interface GetWorkspaceProps {
-  workspaceId: string;
-}
-
-export async function getWorkspace({ workspaceId }: GetWorkspaceProps) {
-  const { account, databases } = await createSessionClient();
-  /*
-    const client = new Client()
-      .setEndpoint(process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT!)
-      .setProject(process.env.NEXT_PUBLIC_APPWRITE_PROJECT!);
-
-    const cookieStore = cookies();
-    const session = cookieStore.get(AUTH_COOKIE);
-
-    if (!session) return null;
-
-    client.setSession(session.value);
-
-    const account = new Account(client);
-    const databases = new Databases(client);
-*/
-  const user = await account.get();
-
-  const member = await getMember({
-    databases,
-    workspaceId,
-    userId: user.$id,
-  });
-
-  if (!member) {
-    throw new Error("unauthorized");
-  }
-
-  const workspace = await databases.getDocument<Workspace>(
-    DATABASE_ID,
-    WORKSPACES_ID,
-    workspaceId
-  );
-
-  return workspace;
 }
 
 interface GetWorkspaceInfoProps {

@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
 
@@ -16,7 +15,6 @@ export function useGetProjects({ workspaceId }: UseGetProjectsProps) {
       });
 
       if (!response.ok) {
-        toast.error("Failed to fetch projects detail");
         throw new Error("Failed to fetch projects detail");
       }
 

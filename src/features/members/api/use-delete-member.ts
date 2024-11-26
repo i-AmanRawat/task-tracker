@@ -22,7 +22,6 @@ export function useDeleteMember() {
       });
 
       if (!response.ok) {
-        toast.error("Failed to delete member");
         throw new Error("Failed to delete member");
       }
 

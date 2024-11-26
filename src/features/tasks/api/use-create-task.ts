@@ -15,7 +15,6 @@ export function useCreateTask() {
       const response = await client.api.tasks.$post({ json });
 
       if (!response.ok) {
-        toast.error("Failed to create task");
         throw new Error("Failed to create task");
       }
 

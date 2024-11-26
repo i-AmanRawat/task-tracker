@@ -74,9 +74,6 @@ export function EditProjectForm({
     mutate(
       { form: data, param: { projectId: initialValues.$id } },
       {
-        onSuccess: () => {
-          form.reset();
-        },
         onError: () => form.reset(),
       }
     );
@@ -103,8 +100,7 @@ export function EditProjectForm({
         onSuccess: () => {
           // window.location.href = `/workspaces/${initialValues.workspaceId}`; //hard refresh plus redirect
 
-          router.push(`/workspace/${initialValues.workspaceId}`);
-          router.refresh();
+          router.push(`/workspaces/${initialValues.workspaceId}`);
         },
       }
     );

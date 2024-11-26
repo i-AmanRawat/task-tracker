@@ -1,5 +1,4 @@
 import { useQuery } from "@tanstack/react-query";
-import { toast } from "sonner";
 
 import { client } from "@/lib/rpc";
 import { TaskStatus } from "../types";
@@ -44,7 +43,6 @@ export function useGetTasks({
       });
 
       if (!response.ok) {
-        toast.error("Failed to fetch tasks detail");
         throw new Error("Failed to fetch tasks detail");
       }
 

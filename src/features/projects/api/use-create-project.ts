@@ -18,7 +18,6 @@ export function useCreateProject() {
       const response = await client.api.projects.$post({ form });
 
       if (!response.ok) {
-        toast.error("Failed to create project");
         throw new Error("Failed to create project");
       }
 

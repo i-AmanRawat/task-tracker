@@ -24,7 +24,6 @@ export function useJoinWorkspace() {
       });
 
       if (!response.ok) {
-        toast.error("Failed to join workspace");
         throw new Error("Failed to join workspace");
       }
 
