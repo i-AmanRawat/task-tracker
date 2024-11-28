@@ -45,7 +45,7 @@ export function Analytics({ data }: ProjectAnalyticsResponseType) {
         </div>
         <div className="flex items-center flex-1">
           <AnalyticsCard
-            title="Completed Tasks"
+            title="Incomplete Tasks"
             value={data.incompleteTaskCount}
             variant={data.incompleteTaskDifference > 0 ? "up" : "down"}
             increaseValue={data.incompleteTaskDifference}
