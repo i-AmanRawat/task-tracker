@@ -21,12 +21,13 @@ import { Input } from "@/components/ui/input";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
+import { signUpWithGithub } from "@/lib/oauth";
 
 import { loginSchema } from "../schema";
 import { useLogin } from "../api/use-login";
@@ -73,9 +74,6 @@ export function SignInCard() {
                       {...field}
                     />
                   </FormControl>
-                  <FormDescription>
-                    {/* This is your public display email. */}
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -89,9 +87,6 @@ export function SignInCard() {
                   <FormControl>
                     <Input type="password" placeholder="******" {...field} />
                   </FormControl>
-                  <FormDescription>
-                    {/* This is your public display email. */}
-                  </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
@@ -118,6 +113,7 @@ export function SignInCard() {
           Signin with Google
         </Button>
         <Button
+          onClick={() => signUpWithGithub()}
           disabled={isPending}
           size="lg"
           variant="secondary"

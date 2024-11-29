@@ -12,6 +12,7 @@ import { DataFilters } from "@/features/tasks/components/data-filters";
 import { columns } from "@/features/tasks/components/columns";
 import { DataTable } from "@/features/tasks/components/data-table";
 import { DataKanban } from "@/features/tasks/components/data-kanban";
+import { useProjectId } from "@/features/projects/hooks/use-project-id";
 
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -36,13 +37,14 @@ export default function TaskViewSwitcher({
   });
 
   const workspaceId = useWorkspaceId();
+  const paramProjectId = useProjectId();
   const { open } = useCreateTaskModal();
 
   const { mutate: bulkUpdate } = useBulkUpdateTasks();
   const { data: tasks, isLoading: isLoadingTasks } = useGetTasks({
     workspaceId,
     status,
-    projectId,
+    projectId: paramProjectId || projectId,
     assigneeId,
     dueDate,
   });

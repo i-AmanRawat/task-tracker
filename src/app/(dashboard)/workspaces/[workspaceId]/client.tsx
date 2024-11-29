@@ -24,9 +24,7 @@ import { PageLoader } from "@/components/page-loader";
 import { PageError } from "@/components/page-error";
 import { Analytics } from "@/components/analytics";
 
-interface WorkspaceIdClientProps {}
-
-export function WorkspaceIdClient({}: WorkspaceIdClientProps) {
+export function WorkspaceIdClient() {
   const workspaceId = useWorkspaceId();
 
   const { data: members, isLoading: isLoadingMembers } = useGetMembers({
